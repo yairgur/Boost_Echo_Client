@@ -111,3 +111,9 @@ void ConnectionHandler::close() {
         std::cout << "closing failed: connection already closed" << std::endl;
     }
 }
+
+void ConnectionHandler::logIn() {isLoggedIn = true;}
+
+void ConnectionHandler::logOff() {isLoggedIn = false;}
+
+bool ConnectionHandler::LoggedIn() {return isLoggedIn;}
