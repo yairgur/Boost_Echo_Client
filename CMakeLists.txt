@@ -10,6 +10,9 @@ include_directories(bin)
 include_directories(include)
 include_directories(src)
 
+link_libraries("-lboost_system")
+
+
 add_executable(Boost_Echo_Client
         include/connectionHandler.h
         include/User.h

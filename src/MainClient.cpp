@@ -4,6 +4,7 @@
 #include <include/User.h>
 #include <boost/lexical_cast.hpp>
 #include <../include/connectionHandler.h>
+#include <thread>
 #include "include/Reader.h"
 #include "include/Writer.h"
 
@@ -36,12 +37,20 @@ int main(){
             ConnectionHandler connectionHandler(host, port);
             connectionHandler.connect();
 //            string frame = "CONNECTED accept-version:1.2 host:" + host + " port:" + to_string(port) + " login:" + words[2] + " passcode:" + passcode + "\n\n" + "\0"; // we should init the first frame
-            string frame = "CONNECT accept-version:1.2 host:stomp.cs.bgu.ac.il login:" + words[2] + " passcode:" + passcode + "\n\n" + "\0";
-            connectionHandler.sendLine(frame);
+            string frame = "CONNECT\naccept-version:1.2\nhost:stomp.cs.bgu.ac.il\nlogin:" + words[2] + "\npasscode:" + passcode + "\n\n" + '\0';
+            cout << frame << endl;
+            boost::split(output, frame, boost::is_any_of("\n"));
+            for(int i=0; i<output.size(); ++i)
+            {
+                connectionHandler.sendLine(output[i]);
+            }
+//            connectionHandler.sendFrameAscii(frame, '\u0000');
+//            char a = '\0';
+//            cout << a << endl;
 
             bool *t = new bool;
             bool *r = new bool;
-            boost::split(output, frame, boost::is_any_of(" "));
+
 //            user->setSubscriptionId(0); // first subscriptionId is 0
 //            Writer keyBoardThread(connectionHandler);
 //            Reader serverSocketThread(connectionHandler);

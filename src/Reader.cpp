@@ -19,24 +19,27 @@ void Reader::run(){
 //    *logOut=false;
 //    *terminate=false;
 //    User * user = User::getInstance();
-    //while (!(*terminate)) {
+    while (!(*terminate)) {
 //        string frame = "";
 //        int i =1;
 //        bool outPut = connectionHandler->getFrameAscii(frame , '\0');
 //        vector<string> socketFrame;
-    vector<string> socketFrame;
-    const short bufsize = 1024;
-    char buf[bufsize];
-    std::string answer;
-    connectionHandler->getLine(answer);
-    string line(buf);
-    int len = line.length();
+        vector<string> socketFrame;
+        const short bufsize = 1024;
+        char buf[bufsize];
+        std::string answer;
+        cout << "now something is wrong" << endl;
+        connectionHandler->getFrameAscii(answer, '\0');
+        //connectionHandler->getLine(answer);
+        cout << "answer from the server is: " << answer << endl;
+        string line(buf);
+        int len = line.length();
 
 //        boost::split(socketFrame, line, boost::is_any_of("\n"));
 //        //User user = User.getInstance();
 //        std::cout << frame << "\n";
 
-        while(1){
+        while (1) {
             // Get back an answer: by using the expected number of bytes (len bytes + newline delimiter)
             // We could also use: connectionHandler.getline(answer) and then get the answer without the newline char at the end
             if (!connectionHandler->getLine(answer)) {
@@ -44,11 +47,11 @@ void Reader::run(){
 
                 break;
             }
-            std::cout <<  << std::endl;
-            int len=line.length();
-            len=answer.length();
+            //std::cout <<  << std::endl;
+            int len = line.length();
+            len = answer.length();
 
-            answer.resize(len-1);
+            answer.resize(len - 1);
             std::cout << "Reply: " << answer << " " << len << " bytes " << std::endl << std::endl;
             if (answer == "bye") {
                 std::cout << "Exiting...\n" << std::endl;
@@ -56,23 +59,20 @@ void Reader::run(){
             }
 
 
-
-            if (socketFrame[0].compare("CONNECTED")){
+            if (socketFrame[0].compare("CONNECTED")) {
                 cout << "Login successful." << endl;
                 //add to map of connected users?
-            }
-            else if(socketFrame[0].compare("RECEIPT")){
+            } else if (socketFrame[0].compare("RECEIPT")) {
+                //if it disconnect message, we should change terminate to true;
+            } else if (socketFrame[0].compare("MESSAGE")) {
 
+            } else if (socketFrame[0].compare("ERROR")) {
+                *terminate = true;
             }
-            else if (socketFrame[0].compare("MESSAGE")){
-
-            }
-            else if (socketFrame[0].compare("ERROR")){
-            }
-            else{
+            else {
                 //throw exception
             }
 
         }
-
+    }
 }
