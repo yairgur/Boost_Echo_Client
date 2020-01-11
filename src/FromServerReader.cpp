@@ -20,7 +20,7 @@ vector<string> FromServerReader::split(string str, string seperator)
     return wordsVector;
 }
 
-FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User user/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
+FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
 
 //FromServerReader::FromServerReader(ConnectionHandler* c, bool* lO, bool* t): connectionHandler(c), logOut(lO), terminate(t)  {cout << "terminate value is " << *terminate << endl;}
 
@@ -58,18 +58,20 @@ void FromServerReader::operator()(){
                 connectionHandler->logIn();
                 //add to map of connected users?
             } else if (socketFrame[0] == "RECEIPT") {
-                MessageType *messageType = user.getMessageTypeByReceiptId(stoi(socketFrame[1].substr(socketFrame[1].find(':')+1)));
-                if(messageType->getMessageType() == "SUBSCRIBE")
+                MessageType messageTypePtr = (user->getMessageTypeByReceiptId(stoi(socketFrame[1].substr(socketFrame[1].find(':') + 1))));
+                cout << "This is message type: " << messageTypePtr.getMessageType() << endl;
+                if(messageTypePtr.getMessageType() == "SUBSCRIBE")
                 {
-                    cout << "Joined club " << messageType->getGenere() << endl;
+                    cout << "Joined club " << messageTypePtr.getGenere() << endl;
 
                 }
-                else if(messageType->getMessageType() == "UNSUBSCRIBE")
+                else if(messageTypePtr.getMessageType() == "UNSUBSCRIBE")
                 {
-                    cout << "Exited club " << messageType->getGenere() << endl;
+                    cout << "Exited club " << messageTypePtr.getGenere() << endl;
                 }
-                else if(messageType->getMessageType() == "DISCONNECT"){
+                else if(messageTypePtr.getMessageType() == "DISCONNECT"){
                     connectionHandler->logOff(); // TODO activate only if disconnected and it will end the program!!
+                    break;
                 }
             } else if (socketFrame[0] == "MESSAGE") {
 

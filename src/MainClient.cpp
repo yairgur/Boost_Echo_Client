@@ -63,8 +63,8 @@ int main() {
 //            connectionHandler.sendFrameAscii(frame, '\u0000');
 //            user->setSubscriptionId(0); // first subscriptionId is 0
             //ReceiptId * receiptId = new ReceiptId();
-            KeyboardReader keyBoardThread(connectionHandler, *user/*, receiptId*/);
-            FromServerReader serverSocketThread(connectionHandler, *user/*, receiptId*/);
+            KeyboardReader keyBoardThread(connectionHandler, user/*, receiptId*/);
+            FromServerReader serverSocketThread(connectionHandler, user/*, receiptId*/);
 
             //bool *t = new bool;
             //bool *r = new bool;

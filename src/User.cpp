@@ -61,20 +61,22 @@ int User::getSubscriptionId(){
 //}
 
 void User::addSubscriptionIdToGenre(string genre, int subscriptionId) {
-    subscribeIdToGenreMap[genre] = subscriptionId;
+    subscribeIdToGenreMap.insert(pair<string, int>(genre, subscriptionId));
 }
 
 int User::getSubscriptionIdFromGenre(string genre) {
-    return subscribeIdToGenreMap.at(genre);
+    return subscribeIdToGenreMap[genre];
 }
 
 void User::addToReceiptIdMap(int receiptId, MessageType *messageType)
 {
-    receiptToMessageType[receiptId] = messageType;
+    receiptToMessageType.insert(pair<int, MessageType*>(receiptId, messageType));
 }
 
-MessageType* User::getMessageTypeByReceiptId(int receiptId) {
-    return receiptToMessageType.at(receiptId);
+MessageType User::getMessageTypeByReceiptId(int receiptId) {
+
+    return *receiptToMessageType[receiptId];
+
 }
 
 

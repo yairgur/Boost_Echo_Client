@@ -1,10 +1,6 @@
 #include "MessageType.h"
 
-MessageType::MessageType(string messageType, string genre, int receiptId){
-this->messageType = messageType;
-this->genre = genre;
-this->receiptId = receiptId;
-}
+MessageType::MessageType(string messageType, string genre, int receiptId): messageType(messageType), genre(genre), receiptId(receiptId){}
 
 string MessageType::getGenere() {
     return genre;

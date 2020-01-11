@@ -14,7 +14,7 @@ using namespace std;
 class MessageType {
 public:
     //get
-    MessageType(string messsageType, string genre, int receiptId);
+    MessageType(string messageType,string genre, int receiptId);
     string getMessageType();
     string getGenere();
     int getReceiptId();

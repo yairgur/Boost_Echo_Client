@@ -18,8 +18,8 @@ public:
     User(string userName, string passcode);
     void addSubscriptionIdToGenre(string genre, int subscriptionId);
     int getSubscriptionIdFromGenre(string genre);
-    MessageType* getMessageTypeByReceiptId(int receiptId);
-    void addToReceiptIdMap(int receiptId, MessageType *messageType);
+    MessageType getMessageTypeByReceiptId(int receiptId);
+    void addToReceiptIdMap(int receiptId, MessageType * messageType);
 
     //~User();
     //bool isLoggedIn();
