@@ -1,0 +1,8 @@
+login 127.0.0.1:5555 bob alice
+join sci
+add sci found
+exit sci
+borrow sci found
+return sci found
+status sci
+logout

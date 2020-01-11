@@ -58,7 +58,12 @@ void FromServerReader::operator()(){
                 connectionHandler->logIn();
                 //add to map of connected users?
             } else if (socketFrame[0] == "RECEIPT") {
-                connectionHandler->logOff();
+                //connectionHandler->logOff(); TODO activate only if disconnected and it will end the program!!
+                string club;
+                string subscriptionId;
+
+                cout << "Exited club" << endl; // here should pull from id the right genre..
+
                 if(socketFrame[1].substr(0, socketFrame[1].find(':')) == "id")
                 {
                     cout << "Exited club" << endl; // here should pull from id the right genre..
