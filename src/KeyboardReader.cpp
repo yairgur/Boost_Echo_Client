@@ -103,6 +103,7 @@ void KeyboardReader::operator()() {
             //output = split(frame, "\n");
             boost::split(output, frame, boost::is_any_of("\n"));
             connectionHandler->sendLine(frame);
+            //connectionHandler->close(); // kills the socket
         }
     }
 }

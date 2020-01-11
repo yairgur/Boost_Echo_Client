@@ -10,9 +10,9 @@ User::User()
 
 }
 
-User::User(string userName, string password) {
+User::User(string userName, string passcode) {
     this->userName = userName;
-    this->passcode = password;
+    this->passcode = passcode;
     this->reciptId = 1;
     this->subscriptionId = 1;
 }

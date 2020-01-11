@@ -14,7 +14,7 @@ using namespace std;
 class User {
 public:
     User();
-    User(string userName, string password);
+    User(string userName, string passcode);
     //~User();
     //bool isLoggedIn();
     //void logIn();

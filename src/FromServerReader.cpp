@@ -58,9 +58,13 @@ void FromServerReader::operator()(){
                 connectionHandler->logIn();
                 //add to map of connected users?
             } else if (socketFrame[0] == "RECEIPT") {
+                connectionHandler->logOff();
                 if(socketFrame[1].substr(0, socketFrame[1].find(':')) == "id")
                 {
                     cout << "Exited club" << endl; // here should pull from id the right genre..
+                }
+                else if(socketFrame[1].substr(0, socketFrame[1].find(':')) == "receipt-id") // if disconnect
+                {
                 }
                 cout << "\nreceipt recieved successfully" << endl;
                 //if it disconnect message, we should change terminate to true;
