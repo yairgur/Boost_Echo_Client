@@ -28,6 +28,7 @@ bool ConnectionHandler::connect() {
         std::cerr << "Connection failed (Error: " << e.what() << ')' << std::endl;
         return false;
     }
+    isLoggedIn = true; // FIXME
     return true;
 }
  

@@ -12,22 +12,23 @@ using namespace std;
 
 class Inventory {
 private:
-    map<string, vector<string>> clientsBooks;
-    map<string, string> borrowedMap;
-    vector<string> wishToBorrow;
+    map<string, string*> clientsBooks;
+    //map<string, vector<string>> clientsBooks;
+    //map<string, string> borrowedMap;
+    //vector<string> wishToBorrow;
 public:
-    map<string, vector<string>> getClientsBooks();
-    map<string, string> getBorrowedFromMap();
-    vector<string> getListOfClientsBooks(string genre);
-    string getBorrowedFrom(string userName);
-    bool deleteBook(string name, string genre);
-    bool deleteBorrowedBook(string bookName);
-    bool contains(string genre, string book);
-    bool addBookToInventory(string bookName, string genre);
-    bool addBorrowedBook(string bookName, string userName);
-    bool isWishToBorrow(string bookName);
-    void insertWishToBorrow(string bookName);
     Inventory();
+//    map<string, vector<string>> getClientsBooks();
+//    map<string, string> getBorrowedFromMap();
+//    vector<string> getListOfClientsBooks(string genre);
+//    string getBorrowedFrom(string userName);
+//    bool deleteBook(string name, string genre);
+//    bool deleteBorrowedBook(string bookName);
+//    bool contains(string genre, string book);
+//    bool addBookToInventory(string bookName, string genre);
+//    bool addBorrowedBook(string bookName, string userName);
+//    bool isWishToBorrow(string bookName);
+//    void insertWishToBorrow(string bookName);
 };
 
 

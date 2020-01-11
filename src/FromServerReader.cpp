@@ -1,47 +1,43 @@
-#include "include/Reader.h"
-#include "include/Writer.h"
+#include "include/FromServerReader.h"
+#include "include/KeyboardReader.h"
 #include <iostream>
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include <include/User.h>
 
-
-
-Reader::Reader(ConnectionHandler & connectionHandler)
+vector<string> FromServerReader::split(string str, string seperator)
 {
-    this->connectionHandler = & connectionHandler;
+    vector<string> wordsVector;
+    size_t pos = 0;
+    string word;
+    while((pos = str.find(seperator)) != string::npos)
+    {
+        word = str.substr(0, pos);
+        wordsVector.push_back(word);
+        str.erase((0, pos+seperator.length()));
+    }
+    wordsVector.push_back(str);
+    return wordsVector;
 }
 
-Reader::Reader(ConnectionHandler* c, bool* lO, bool* t): connectionHandler(c), logOut(lO), terminate(t)  {cout << "terminate value is " << *terminate << endl;}
+FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User user): connectionHandler(connectionHandler), user(user) {}
 
-void Reader::run(){
-    cout << "We are on the reader loop" << endl;
-    *terminate = false;
+//FromServerReader::FromServerReader(ConnectionHandler* c, bool* lO, bool* t): connectionHandler(c), logOut(lO), terminate(t)  {cout << "terminate value is " << *terminate << endl;}
 
-//    *logOut=false;
-//    *terminate=false;
-//    User * user = User::getInstance();
-    while (!(*terminate)) {
-//        string frame = "";
-//        int i =1;
-//        bool outPut = connectionHandler->getFrameAscii(frame , '\0');
-//        vector<string> socketFrame;
+void FromServerReader::operator()(){
+    while (connectionHandler->LoggedIn()) {
+        string answer;
         vector<string> socketFrame;
-        const short bufsize = 1024;
-        char buf[bufsize];
-        std::string answer;
         connectionHandler->getFrameAscii(answer, '\0');
-        //connectionHandler->getLine(answer);
-        cout << "answer from the server is: " << answer << endl;
-        string line(buf);
-        int len = line.length();
+        cout << "answer from the server is:\n" << answer << endl;
 
+        //socketFrame = split(answer, "\n");
         boost::split(socketFrame, answer, boost::is_any_of("\n"));
 //        //User user = User.getInstance();
 //        std::cout << frame << "\n";
 
        // while (true) {
-//            cout << "enrered true while in Reader" << endl;
+//            cout << "enrered true while in FromServerReader" << endl;
             // Get back an answer: by using the expected number of bytes (len bytes + newline delimiter)
             // We could also use: connectionHandler.getline(answer) and then get the answer without the newline char at the end
 //            if (!connectionHandler->getLine(answer)) {
@@ -56,17 +52,16 @@ void Reader::run(){
 
 //            answer.resize(len - 1);
 //            std::cout << "Reply: " << answer << " " << len << " bytes " << std::endl << std::endl;
-            if (answer == "bye") {
-                std::cout << "Exiting...\n" << std::endl;
-                //break;
-            }
-
-            cout << "now we will enter to frame process : " << socketFrame[0] << " with version" << socketFrame[1] << endl;
+            //cout << "now we will enter to frame process : " << socketFrame[0] << " with version" << socketFrame[1] << endl;
             if (socketFrame[0]=="CONNECTED") {
                 cout << "Login successful." << endl;
                 connectionHandler->logIn();
                 //add to map of connected users?
             } else if (socketFrame[0] == "RECEIPT") {
+                if(socketFrame[1].substr(0, socketFrame[1].find(':')) == "id")
+                {
+                    cout << "Exited club" << endl; // here should pull from id the right genre..
+                }
                 cout << "\nreceipt recieved successfully" << endl;
                 //if it disconnect message, we should change terminate to true;
             } else if (socketFrame[0] == "MESSAGE") {
@@ -78,7 +73,7 @@ void Reader::run(){
                 cout << "Am i in the else?????" << endl;
                 //throw exception
             }
-        //cin.getline(buf, bufsize); // FIXME - should find the right place for it
-      //  }
     }
 }
+
+
