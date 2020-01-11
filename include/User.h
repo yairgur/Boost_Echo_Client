@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include "../include/Inventory.h"
+#include "MessageType.h"
 
 using namespace std;
 
@@ -15,6 +16,11 @@ class User {
 public:
     User();
     User(string userName, string passcode);
+    void addSubscriptionIdToGenre(string genre, int subscriptionId);
+    int getSubscriptionIdFromGenre(string genre);
+    MessageType* getMessageTypeByReceiptId(int receiptId);
+    void addToReceiptIdMap(int receiptId, MessageType *messageType);
+
     //~User();
     //bool isLoggedIn();
     //void logIn();
@@ -34,12 +40,14 @@ private:
     string passcode;
     int subscriptionId;
     map<string, int> subscriptionIdMap; // genre to subscription id
+    map<int, MessageType*> receiptToMessageType;
     bool loggedIn;
     //string gener;
     vector<std::string> books;
     //vector<std::string> subscribedGenres;
-    //map<int, string> receiptMap; //
+    map<string, int> subscribeIdToGenreMap;
     int reciptId;
+
     //DB *instance; // to get the singleton DB
     //static User *instance;
 

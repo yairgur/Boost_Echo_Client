@@ -1,4 +1,5 @@
 #include "../include/User.h"
+#include "../include/MessageType.h"
 #include <vector>
 
 using namespace std;
@@ -59,9 +60,22 @@ int User::getSubscriptionId(){
 //    return inventory;
 //}
 
+void User::addSubscriptionIdToGenre(string genre, int subscriptionId) {
+    subscribeIdToGenreMap[genre] = subscriptionId;
+}
 
+int User::getSubscriptionIdFromGenre(string genre) {
+    return subscribeIdToGenreMap.at(genre);
+}
 
+void User::addToReceiptIdMap(int receiptId, MessageType *messageType)
+{
+    receiptToMessageType[receiptId] = messageType;
+}
 
+MessageType* User::getMessageTypeByReceiptId(int receiptId) {
+    return receiptToMessageType.at(receiptId);
+}
 
 
 
