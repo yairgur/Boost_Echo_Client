@@ -20,22 +20,14 @@ public:
     int getSubscriptionIdFromGenre(string genre);
     MessageType getMessageTypeByReceiptId(int receiptId);
     void addToReceiptIdMap(int receiptId, MessageType * messageType);
+    string containsSubscriptionId(int subscriptionId); // for status
 
-    //~User();
-    //bool isLoggedIn();
-    //void logIn();
-    //void disconnect();
-    //void insertReceipt(string message);
-    //string findReceipt(int reciptId);
-    //static User* getInstance();
-    //void addBook(const string& book);
-    //void setSubscriptionId(string id);
     int getSubscriptionId();
     string getName();
-    //Inventory getUserInventory();
+    Inventory* getUserInventory();
 
 private:
-    Inventory inventory;
+    Inventory* inventory;
     string userName;
     string passcode;
     int subscriptionId;
@@ -47,10 +39,6 @@ private:
     //vector<std::string> subscribedGenres;
     map<string, int> subscribeIdToGenreMap;
     int reciptId;
-
-    //DB *instance; // to get the singleton DB
-    //static User *instance;
-
 };
 
 

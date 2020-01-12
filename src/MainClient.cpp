@@ -11,21 +11,22 @@
 
 //vector<string> split(string str, string seperator);
 
-vector<string> split(string str, string seperator);
-vector<string> split(string str, string seperator) {
+vector<string> split(string s, string delimiter);
+vector<string> split(string s, string delimiter)
+{
     vector<string> wordsVector;
     size_t pos = 0;
-    string word;
-    while((pos = str.find(seperator)) != string::npos)
-    {
-        word = str.substr(0, pos);
-        wordsVector.push_back(word);
-        str.erase((0, pos+seperator.length()));
+    std::string token;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+        std::cout << token << std::endl;
+        s.erase(0, pos + delimiter.length());
+        wordsVector.push_back(token);
     }
-    wordsVector.push_back(str);
+    wordsVector.push_back(s);
+
     return wordsVector;
 }
-
 using namespace std;
 
 

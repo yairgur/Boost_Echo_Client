@@ -5,24 +5,33 @@
 #include <boost/algorithm/string.hpp>
 #include <include/User.h>
 
-vector<string> FromServerReader::split(string str, string seperator)
+vector<string> FromServerReader::split(string s, string delimiter)
 {
     vector<string> wordsVector;
     size_t pos = 0;
-    string word;
-    while((pos = str.find(seperator)) != string::npos)
-    {
-        word = str.substr(0, pos);
-        wordsVector.push_back(word);
-        str.erase((0, pos+seperator.length()));
+    std::string token;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+//        std::cout << token << std::endl;
+        s.erase(0, pos + delimiter.length());
+        wordsVector.push_back(token);
     }
-    wordsVector.push_back(str);
+    wordsVector.push_back(s);
+
     return wordsVector;
 }
 
-FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
+bool FromServerReader::contains(vector<string> vec, string toCompare)
+{
+    for(string s:vec)
+    {
+        if(s == toCompare)
+            return true;
+    }
+    return false;
+}
 
-//FromServerReader::FromServerReader(ConnectionHandler* c, bool* lO, bool* t): connectionHandler(c), logOut(lO), terminate(t)  {cout << "terminate value is " << *terminate << endl;}
+FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
 
 void FromServerReader::operator()(){
     while (connectionHandler->LoggedIn()) {
@@ -31,32 +40,11 @@ void FromServerReader::operator()(){
         connectionHandler->getFrameAscii(answer, '\0');
         cout << "answer from the server is:\n" << answer << endl;
 
-        //socketFrame = split(answer, "\n");
         boost::split(socketFrame, answer, boost::is_any_of("\n"));
-//        //User user = User.getInstance();
-//        std::cout << frame << "\n";
 
-       // while (true) {
-//            cout << "enrered true while in FromServerReader" << endl;
-            // Get back an answer: by using the expected number of bytes (len bytes + newline delimiter)
-            // We could also use: connectionHandler.getline(answer) and then get the answer without the newline char at the end
-//            if (!connectionHandler->getLine(answer)) {
-//                std::cout << "Disconnected. Exiting...\n" << std::endl;
-//
-//                break;
-//            }
-// FIXME this code
-            //std::cout <<  << std::endl;
-//            int len = line.length();
-//            len = answer.length();
-
-//            answer.resize(len - 1);
-//            std::cout << "Reply: " << answer << " " << len << " bytes " << std::endl << std::endl;
-            //cout << "now we will enter to frame process : " << socketFrame[0] << " with version" << socketFrame[1] << endl;
             if (socketFrame[0]=="CONNECTED") {
                 cout << "Login successful." << endl;
                 connectionHandler->logIn();
-                //add to map of connected users?
             } else if (socketFrame[0] == "RECEIPT") {
                 MessageType messageTypePtr = (user->getMessageTypeByReceiptId(stoi(socketFrame[1].substr(socketFrame[1].find(':') + 1))));
                 cout << "This is message type: " << messageTypePtr.getMessageType() << endl;
@@ -74,6 +62,67 @@ void FromServerReader::operator()(){
                     break;
                 }
             } else if (socketFrame[0] == "MESSAGE") {
+                vector<string> body = split(socketFrame[5], " ");
+                if(contains(body, "added"))
+                {
+                    //inventory = user->getUserInventory();
+                    Inventory* userInventory = user->getUserInventory();
+                    string book = socketFrame[5].substr(socketFrame[5].find("the book") + 9);
+                    string genre = socketFrame[3].substr(socketFrame[3].find(':')+1);
+                    //inventory->addBookToInventory(book, genre);
+                    (*userInventory).addBookToInventory(book, genre);
+                    cout << book << endl;
+                }
+                else if(contains(body, "borrow"))
+                {
+                    Inventory* userInventory = user->getUserInventory();
+                    if(user->getName() == body[0])
+                    {
+                        userInventory->insertWishToBorrow(socketFrame[5].substr(socketFrame[5].find("has")+4));
+                    }
+                    else{
+                        bool isExist = userInventory->isWishToBorrow(socketFrame[5].substr(socketFrame[5].find("has")+4));
+                        if(isExist){
+                            string subscriptionId = socketFrame[1].substr(socketFrame[1].find(':')+1);
+                            string genre = user->containsSubscriptionId(stoi(subscriptionId));
+                            string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + " has " + body[0] + "\n" + '\0';
+                            connectionHandler->sendLine(frame);
+                        }
+                    }
+                }
+                else if(contains(body, "Returning"))
+                {
+                    string book = socketFrame[5].substr(socketFrame[5].find(' ')+1, socketFrame[5].find("to")-11);
+                    string userName = socketFrame[5].substr(socketFrame[5].find_last_of(' ')+1);
+                    //inventory = user->getUserInventory();
+                    Inventory* userInventory = user->getUserInventory();
+                    string genre = socketFrame[3].substr(socketFrame[5].find(':')+1);
+                    userInventory->deleteFromInventory(book, genre);
+                    //userInventory->deleteFromInventory(book, genre);
+                    cout << "we just deleted " << book << " from the inventory of user: " << user->getName() << endl;
+                    if(user->getName() == userName)
+                    {
+                        //inventory->addBookToInventory(book, genre);
+                        userInventory->addBookToInventory(book, genre);
+                        cout << "we just added " << book << " ========TO======= the inventory of user: " << user->getName() << endl;
+                    }
+                    cout << book << " " << userName << endl;
+                }
+                else if(contains(body, "status"))
+                {
+                    string subscriptionId = socketFrame[1].substr(socketFrame[1].find(':')+1);
+                    string genre = user->containsSubscriptionId(stoi(subscriptionId));
+                    if(genre != "")
+                    { //there is a gener with this subscriptionId
+                        //inventory = user->getUserInventory();
+                        Inventory* userInventory = user->getUserInventory();
+                        //string booksList = inventory->toString();
+                        string booksList = userInventory->toString();
+                        cout<< booksList << endl;
+                        string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + ":" + booksList + "\n" + '\0';
+                        connectionHandler->sendLine(frame);
+                    }
+                }
 
             } else if (socketFrame[0] == "ERROR") {
                 //*terminate = true;

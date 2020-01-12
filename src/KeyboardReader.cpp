@@ -11,18 +11,19 @@
 
 using namespace std;
 
-vector<string> KeyboardReader::split(string str, string seperator)
+vector<string> KeyboardReader::split(string s, string delimiter)
 {
     vector<string> wordsVector;
     size_t pos = 0;
-    string word;
-    while((pos = str.find(seperator)) != string::npos)
-    {
-        word = str.substr(0, pos);
-        wordsVector.push_back(word);
-        str.erase((0, pos+seperator.length()));
+    std::string token;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+        std::cout << token << std::endl;
+        s.erase(0, pos + delimiter.length());
+        wordsVector.push_back(token);
     }
-    wordsVector.push_back(str);
+    wordsVector.push_back(s);
+
     return wordsVector;
 }
 
@@ -41,6 +42,13 @@ void KeyboardReader::operator()() {
             vector<string> output;
             //commands = split(line, " ");
             boost::split(commands, line, boost::is_any_of(" "));
+            if(commands.size()>3) //if book name is more than one word
+            {
+                for(int i=3; i<commands.size(); i++) {
+                    commands[2] += " " + commands[i];
+                }
+                //commands[2] = commands[2].substr(0, commands[2].size()-1);
+            }
             if (commands[0] == "login" && connectionHandler->LoggedIn()) {
                 cout << "This Thread is already occupied by a user that logged in"
                      << endl; //TODO what do we do with it?
@@ -98,7 +106,7 @@ void KeyboardReader::operator()() {
                 boost::split(output, frame, boost::is_any_of("\n"));
                 connectionHandler->sendLine(frame);
             } else if (commands[0] == "status") {
-                string frame = "SEND\ndestination:" + commands[1] + "\n\n" + "book status" + "\n" + '\0';
+                string frame = "SEND\ndestination:" + commands[1] + "\n\n" + "Book status" + "\n" + '\0';
                 vector<string> output;
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));

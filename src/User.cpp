@@ -16,6 +16,7 @@ User::User(string userName, string passcode) {
     this->passcode = passcode;
     this->reciptId = 1;
     this->subscriptionId = 1;
+    this->inventory = new Inventory();
 }
 
 //User* User::instance = 0;
@@ -56,9 +57,9 @@ int User::getSubscriptionId(){
 //    return receiptMap[receiptId];
 //}
 //
-//Inventory User::getUserInventory() {
-//    return inventory;
-//}
+Inventory* User::getUserInventory() {
+    return inventory;
+}
 
 void User::addSubscriptionIdToGenre(string genre, int subscriptionId) {
     subscribeIdToGenreMap.insert(pair<string, int>(genre, subscriptionId));
@@ -77,6 +78,18 @@ MessageType User::getMessageTypeByReceiptId(int receiptId) {
 
     return *receiptToMessageType[receiptId];
 
+}
+
+string User::containsSubscriptionId(int subscriptionId)
+{
+    for(map<string, int>::iterator it = subscribeIdToGenreMap.begin(); it != subscribeIdToGenreMap.end(); ++it)
+    {
+        if(it->second == subscriptionId) {
+            return it->first;
+        }
+
+    }
+    return "";
 }
 
 

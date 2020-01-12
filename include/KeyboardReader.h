@@ -14,7 +14,7 @@ public:
     void operator()();
     void increaseReceiptId();
     // void run();
-    vector<string> split(string str, string seperator);
+    vector<string> split(string str, string delimiter);
     void increaseSubscriptionId();
 private:
     ConnectionHandler * connectionHandler;
@@ -22,6 +22,7 @@ private:
     int subscriptionId = 1;
     //ReceiptId * receiptId;
     int receiptId = 1;
+
 
 
 };

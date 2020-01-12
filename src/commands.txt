@@ -1,4 +1,5 @@
 login 127.0.0.1:5555 bob alice
+login 127.0.0.1:5555 bob123 alice
 join sci
 add sci found
 exit sci
@@ -6,3 +7,6 @@ borrow sci found
 return sci found
 status sci
 logout
+
+
+login 132.72.45.157:2001 bob alice

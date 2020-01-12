@@ -9,11 +9,13 @@ public:
     FromServerReader(ConnectionHandler * connectionHandler, User * user/*, ReceiptId * receiptId*/);
 //    FromServerReader(ConnectionHandler* c, bool* lO, bool* t); // do we need it?
     void operator()();
-    vector<string> split(string str, string seperator);
+    vector<string> split(string str, string delimiter);
+    bool contains(vector<string> vec, string toCompare);
     //void run();
 private:
     ConnectionHandler * connectionHandler;
     User * user;
+
 };
 
 
