@@ -22,9 +22,9 @@ public:
     map<string, string> getBorrowedFromMap();
     vector<string> getListOfClientsBooks(string genre);
     string getBorrowedFrom(string userName);
-    bool deleteFromInventory(string name, string genre);
+    bool deleteFromInventory(string name);
     bool deleteBorrowedBook(string bookName);
-    bool contains(string genre, string book);
+    bool isExistInClientBooks(string book);
     bool addBookToInventory(string bookName, string genre);
     bool addBorrowedBook(string bookName, string userName);
     bool isWishToBorrow(string bookName);

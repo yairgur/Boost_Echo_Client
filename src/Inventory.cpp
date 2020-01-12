@@ -47,17 +47,19 @@ void Inventory::insertWishToBorrow(string bookName) {
 
 
 //// delete
-bool Inventory::deleteFromInventory(string book, string genre){
-    vector<string> clientsBooksInGenre = clientsBooks[genre];
-    for(vector<string>::iterator it = clientsBooksInGenre.begin(); it != clientsBooksInGenre.end(); ++it)
+bool Inventory::deleteFromInventory(string book){
+    bool deleted = false;
+    for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end() && !deleted; ++it)
     {
-        if(*it == book) {
-            clientsBooks[genre].erase(it);
-            return true;
+        for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end() && !deleted; ++it1)
+        {
+            if((*it1) == book){
+                clientsBooks.erase((*it1));
+                deleted = true;
+            }
         }
-
     }
-    return false;
+    return deleted;
 }
 
 bool Inventory::deleteBorrowedBook(string bookName){ // todo: add try ..
@@ -87,15 +89,19 @@ bool Inventory::addBorrowedBook(string bookName, string userName) {
 }
 
 
-bool Inventory::contains(string genre, string book)
+bool Inventory::isExistInClientBooks(string book)
 {
-    vector<string> clientsBooksInGenre = clientsBooks.at(genre);
-    for(vector<string>::iterator it = clientsBooksInGenre.begin(); it != clientsBooksInGenre.end(); ++it)
+    bool isExist = false;
+    for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end(); ++it)
     {
-        if(it->compare(book))
-            return true;
+        for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end(); ++it1)
+        {
+           if((*it1) == book){
+               isExist = true;
+           }
+        }
     }
-    return false;
+    return isExist;
 }
 
 string Inventory::toString(){
