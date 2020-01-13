@@ -27,7 +27,7 @@ vector<string> KeyboardReader::split(string s, string delimiter)
     return wordsVector;
 }
 
-KeyboardReader::KeyboardReader(ConnectionHandler * connectionHandler, User * user/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
+KeyboardReader::KeyboardReader(ConnectionHandler * connectionHandler, User * user, bool *terminate/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
 
 //KeyboardReader::KeyboardReader(ConnectionHandler* c, bool *lO, bool *t) : connectionHandler(c), logOut(lO), terminate(t)  {cout << "terminate value is " << *terminate << endl;}
 
@@ -42,6 +42,11 @@ void KeyboardReader::operator()() {
             vector<string> output;
             //commands = split(line, " ");
             boost::split(commands, line, boost::is_any_of(" "));
+            if(line == "bye")
+            {
+                connectionHandler->logOff();
+                break;
+            }
             if(commands.size()>3) //if book name is more than one word
             {
                 for(int i=3; i<commands.size(); i++) {
@@ -52,6 +57,10 @@ void KeyboardReader::operator()() {
             if (commands[0] == "login" && connectionHandler->LoggedIn()) {
                 cout << "This Thread is already occupied by a user that logged in"
                      << endl; //TODO what do we do with it?
+                string frame = "DISCONNECT\nreceipt:" + to_string(receiptId) + "\n\n" + '\0';
+                increaseReceiptId();
+                connectionHandler->sendLine(frame);
+                break;
             } else if (commands[0] == "login") {
                 //user = new User(words[2], words[3]); // TODO in what map do we put it???
                 string frame =

@@ -31,7 +31,7 @@ bool FromServerReader::contains(vector<string> vec, string toCompare)
     return false;
 }
 
-FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
+FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user, bool *terminate/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
 
 void FromServerReader::operator()(){
     while (connectionHandler->LoggedIn()) {
@@ -63,7 +63,7 @@ void FromServerReader::operator()(){
                 }
             } else if (socketFrame[0] == "MESSAGE") {
                 vector<string> body = split(socketFrame[5], " ");
-                if(contains(body, "has")){///private case of borrow
+                if(contains(body, "has") && !contains(body, "added")){///private case of borrow
                     Inventory* userInventory = user->getUserInventory();
                     if(user->getName() == body[0])
                     {
@@ -75,15 +75,14 @@ void FromServerReader::operator()(){
                             string subscriptionId = socketFrame[1].substr(socketFrame[1].find(':')+1);
                             string genre = user->containsSubscriptionId(stoi(subscriptionId));
                             string borrowedUser = body[0];
-                            string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking" + socketFrame[5].substr(socketFrame[5].find("has")+4) + " from " + borrowedUser + "\n" + '\0';
+                            string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + socketFrame[5].substr(socketFrame[5].find("has")+4) + " from " + borrowedUser + "\n" + '\0';
                             connectionHandler->sendLine(frame);
                         }
                     }
 
                 }
-                if(contains(body, "added"))
+                if(contains(body, "added") && (user->getName() == body[0]))
                 {
-                    //inventory = user->getUserInventory();
                     Inventory* userInventory = user->getUserInventory();
                     string book = socketFrame[5].substr(socketFrame[5].find("the book") + 9);
                     string genre = socketFrame[3].substr(socketFrame[3].find(':')+1);
@@ -144,8 +143,14 @@ void FromServerReader::operator()(){
                 }
 
             } else if (socketFrame[0] == "ERROR") {
-                //*terminate = true;
+                connectionHandler->logOff();
+                break;
+
             }
+//            else if(socketFrame[0] == "OUT")
+//            {
+//
+//            }
     }
 }
 

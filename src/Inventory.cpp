@@ -34,7 +34,7 @@ bool Inventory::isWishToBorrow(string bookName) {
     bool flag = false;
     for(vector<string>::iterator it = wishToBorrow.begin(); it != wishToBorrow.end(); ++it)
     {
-        if(it->compare(bookName))
+        if((*it)==bookName)
             flag = true;
     }
         return flag;
@@ -53,7 +53,7 @@ bool Inventory::deleteFromInventory(string book){
     {
         for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end() && !deleted; ++it1)
         {
-            if((*it1) == book){
+            if((string)(*it1) == book){
                 clientsBooks.erase((*it1));
                 deleted = true;
             }
