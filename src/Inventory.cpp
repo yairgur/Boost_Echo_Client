@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <queue>
+#include <include/User.h>
+
 
 using namespace std;
 
@@ -31,17 +34,17 @@ string Inventory::getBorrowedFrom (string userName)
 
 
 bool Inventory::isWishToBorrow(string bookName) {
-    bool flag = false;
-    for(vector<string>::iterator it = wishToBorrow.begin(); it != wishToBorrow.end(); ++it)
+    map<string, string>::iterator it = wishToBorrow.find(bookName);
+    if(it != wishToBorrow.end())
     {
-        if((*it)==bookName)
-            flag = true;
+        return true;
     }
-        return flag;
+    return false;
 }
 
-void Inventory::insertWishToBorrow(string bookName) {
-    wishToBorrow.push_back(bookName);
+
+void Inventory::insertWishToBorrow(string bookName, string user) {
+    wishToBorrow[bookName] = user;
 }
 
 
@@ -87,6 +90,14 @@ bool Inventory::addBorrowedBook(string bookName, string userName) {
     borrowedMap[bookName] = userName;
     return true;
 }
+
+string Inventory::getFromBorrowedMap(string bookName)
+{
+    string res = borrowedMap[bookName];
+    borrowedMap.erase(bookName);
+    return res;
+}
+
 
 
 bool Inventory::isExistInClientBooks(string book)

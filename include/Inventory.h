@@ -4,6 +4,8 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <queue>
+#include "User.h"
 
 
 #ifndef BOOST_ECHO_CLIENT_INVENTORY_H
@@ -14,8 +16,8 @@ class Inventory {
 private:
     //map<string, string*> clientsBooks;
     map<string, vector<string>> clientsBooks;
-    map<string, string> borrowedMap;
-    vector<string> wishToBorrow;
+    map<string, string> borrowedMap; // borrowed from name ---- to book name
+    map<string, string> wishToBorrow;
 public:
     Inventory();
     map<string, vector<string>> getClientsBooks();
@@ -26,9 +28,10 @@ public:
     bool deleteBorrowedBook(string bookName);
     bool isExistInClientBooks(string book);
     bool addBookToInventory(string bookName, string genre);
+    string getFromBorrowedMap(string bookName);
     bool addBorrowedBook(string bookName, string userName);
     bool isWishToBorrow(string bookName);
-    void insertWishToBorrow(string bookName);
+    void insertWishToBorrow(string bookName, string user);
     string toString();
 };
 

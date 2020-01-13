@@ -76,6 +76,8 @@ void FromServerReader::operator()(){
                             string genre = user->containsSubscriptionId(stoi(subscriptionId));
                             string borrowedUser = body[0];
                             string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + socketFrame[5].substr(socketFrame[5].find("has")+4) + " from " + borrowedUser + "\n" + '\0';
+                            userInventory->addBorrowedBook(socketFrame[5].substr(socketFrame[5].find("has")+4), user->getName());
+                            //here add to borrowed map
                             connectionHandler->sendLine(frame);
                         }
                     }
@@ -95,7 +97,7 @@ void FromServerReader::operator()(){
                     Inventory* userInventory = user->getUserInventory();
                     if(user->getName() == body[0])
                     {
-                        userInventory->insertWishToBorrow(socketFrame[5].substr(socketFrame[5].find("borrow")+7));
+                        userInventory->insertWishToBorrow(socketFrame[5].substr(socketFrame[5].find("borrow")+7), user->getName());
                     }
                     else{
                         bool isExist = userInventory->isExistInClientBooks(socketFrame[5].substr(socketFrame[5].find("borrow")+7));
@@ -111,20 +113,18 @@ void FromServerReader::operator()(){
                 }
                 else if(contains(body, "Returning"))
                 {
-                    string book = socketFrame[5].substr(socketFrame[5].find(' ')+1, socketFrame[5].find("to")-11);
+                    string book = socketFrame[5].substr(socketFrame[5].find(' ')+1, socketFrame[5].find("to")-11);// todo: book name 1!
                     string userName = socketFrame[5].substr(socketFrame[5].find_last_of(' ')+1);
                     //inventory = user->getUserInventory();
                     Inventory* userInventory = user->getUserInventory();
                     string genre = socketFrame[3].substr(socketFrame[5].find(':')+1);
-                    userInventory->deleteFromInventory(book);
-                    cout << "we just deleted " << book << " from the inventory of user: " << user->getName() << endl;
                     if(user->getName() == userName)
                     {
-                        //inventory->addBookToInventory(book, genre);
-                        userInventory->addBookToInventory(book, genre);
-                        cout << "we just added " << book << " ========TO======= the inventory of user: " << user->getName() << endl;
+                        userInventory->addBookToInventory(book, genre); // todo: book name 1!!
+                    } else {
+                        userInventory->deleteFromInventory(book);
                     }
-                    cout << book << " " << userName << endl;
+                    //cout << "we just deleted " << book << " from the inventory of user: " << user->getName() << endl;
                 }
                 else if(contains(body, "status"))
                 {
