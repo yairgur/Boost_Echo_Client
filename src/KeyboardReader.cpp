@@ -94,6 +94,12 @@ void KeyboardReader::operator()() {
                 increaseReceiptId();
                 connectionHandler->sendLine(frame);
             } else if (commands[0] == "add") {
+
+                Inventory* userInventory = user->getUserInventory();
+                string book = commands[2]; // todo :func that extract full book name
+                string genre = commands[1];
+                (*userInventory).addBookToInventory(book, genre);
+
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + user->getName() + " has added the book " +
                                commands[2] + "\n" + '\0';
                 vector<string> output;

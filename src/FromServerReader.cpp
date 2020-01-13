@@ -83,12 +83,12 @@ void FromServerReader::operator()(){
                 }
                 if(contains(body, "added") && (user->getName() == body[0]))
                 {
-                    Inventory* userInventory = user->getUserInventory();
-                    string book = socketFrame[5].substr(socketFrame[5].find("the book") + 9);
-                    string genre = socketFrame[3].substr(socketFrame[3].find(':')+1);
-                    //inventory->addBookToInventory(book, genre);
-                    (*userInventory).addBookToInventory(book, genre);
-                    cout << book << endl;
+//                    Inventory* userInventory = user->getUserInventory();
+//                    string book = socketFrame[5].substr(socketFrame[5].find("the book") + 9);
+//                    string genre = socketFrame[3].substr(socketFrame[3].find(':')+1);
+//                    //inventory->addBookToInventory(book, genre);
+//                    (*userInventory).addBookToInventory(book, genre);
+//                    cout << book << endl;
                 }
                 else if(contains(body, "borrow"))
                 {
