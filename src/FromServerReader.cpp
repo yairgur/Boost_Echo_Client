@@ -76,7 +76,7 @@ void FromServerReader::operator()(){
                             string genre = user->containsSubscriptionId(stoi(subscriptionId));
                             string borrowedUser = body[0];
                             string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + socketFrame[5].substr(socketFrame[5].find("has")+4) + " from " + borrowedUser + "\n" + '\0';
-                            userInventory->addBorrowedBook(socketFrame[5].substr(socketFrame[5].find("has")+4), user->getName());
+                            userInventory->addBorrowedBook(socketFrame[5].substr(socketFrame[5].find("has")+4), body[0]);
                             //here add to borrowed map
                             connectionHandler->sendLine(frame);
                         }
@@ -121,9 +121,9 @@ void FromServerReader::operator()(){
                     if(user->getName() == userName)
                     {
                         userInventory->addBookToInventory(book, genre); // todo: book name 1!!
-                    } else {
-                        userInventory->deleteFromInventory(book);
-                    }
+                    } //else {
+                      //  userInventory->deleteFromInventory(book);
+                    //}
                     //cout << "we just deleted " << book << " from the inventory of user: " << user->getName() << endl;
                 }
                 else if(contains(body, "status"))

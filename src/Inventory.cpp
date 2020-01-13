@@ -51,17 +51,18 @@ void Inventory::insertWishToBorrow(string bookName, string user) {
 
 //// delete
 bool Inventory::deleteFromInventory(string book){
-    bool deleted = false;
-    for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end() && !deleted; ++it)
-    {
-        for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end() && !deleted; ++it1)
-        {
-            if((string)(*it1) == book){
-                clientsBooks.erase((*it1));
-                deleted = true;
-            }
-        }
-    }
+    bool deleted = true;
+    clientsBooks.erase(book);
+//    for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end() && !deleted; ++it)
+//    {
+//        for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end() && !deleted; ++it1)
+//        {
+//            if((string)(*it1) == book){
+//                clientsBooks.erase((*it1));
+//                deleted = true;
+//            }
+//        }
+//    }
     return deleted;
 }
 

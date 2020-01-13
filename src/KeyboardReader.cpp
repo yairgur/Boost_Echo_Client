@@ -116,6 +116,7 @@ void KeyboardReader::operator()() {
             } else if (commands[0] == "return") {
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + "Returning " + commands[2] + " to " +
                                user->getUserInventory()->getFromBorrowedMap(commands[2]) + "\n" + '\0';
+                user->getUserInventory()->deleteFromInventory(commands[2]);
                 vector<string> output;
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));
