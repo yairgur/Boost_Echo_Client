@@ -27,7 +27,7 @@ vector<string> KeyboardReader::split(string s, string delimiter)
     return wordsVector;
 }
 
-KeyboardReader::KeyboardReader(ConnectionHandler * connectionHandler, User * user, bool *terminate/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
+KeyboardReader::KeyboardReader(ConnectionHandler * connectionHandler, User * user, Inventory * inventory): connectionHandler(connectionHandler), user(user), inventory(inventory) {}
 
 //KeyboardReader::KeyboardReader(ConnectionHandler* c, bool *lO, bool *t) : connectionHandler(c), logOut(lO), terminate(t)  {cout << "terminate value is " << *terminate << endl;}
 
@@ -94,13 +94,11 @@ void KeyboardReader::operator()() {
                 increaseReceiptId();
                 connectionHandler->sendLine(frame);
             } else if (commands[0] == "add") {
-
-                Inventory* userInventory = user->getUserInventory();
                 string book = commands[2]; // todo :func that extract full book name
                 string genre = commands[1];
 
                 cout << "YYY "<< genre << endl;
-                (*userInventory).addBookToInventory(book, genre);
+                (*inventory).addBookToInventory(book, genre);
 
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + user->getName() + " has added the book " +
                                commands[2] + "\n" + '\0';
@@ -114,13 +112,13 @@ void KeyboardReader::operator()() {
                 vector<string> output;
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));
-                user->getUserInventory()->insertWishToBorrow(commands[2]);
+                inventory->insertWishToBorrow(commands[2]);
                 connectionHandler->sendLine(frame);
             } else if (commands[0] == "return") {
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + "Returning " + commands[2] + " to " +
-                               user->getUserInventory()->getFromBorrowedMap(commands[2]) + "\n" + '\0';
-                user->getUserInventory()->deleteBorrowedBook(commands[2]);
-                user->getUserInventory()->deleteFromInventory(commands[2], commands[1]);
+                               inventory->getFromBorrowedMap(commands[2]) + "\n" + '\0';
+                inventory->deleteBorrowedBook(commands[2]);
+                inventory->deleteFromInventory(commands[2], commands[1]);
                 vector<string> output;
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));

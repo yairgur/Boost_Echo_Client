@@ -47,6 +47,7 @@ int main() {
             string portS = commands[1].substr(commands[1].find(':') + 1);
             short port = boost::lexical_cast<short>(portS);
             User *user = new User(commands[2], commands[3]);
+            Inventory * inventory = new Inventory();
             ConnectionHandler *connectionHandler = new ConnectionHandler(host, port);
             connectionHandler->connect();
             string frame =
@@ -57,8 +58,8 @@ int main() {
             connectionHandler->sendLine(frame);
 
             bool *terminate;
-            KeyboardReader keyBoardThread(connectionHandler, user, terminate/*, receiptId*/);
-            FromServerReader serverSocketThread(connectionHandler, user, terminate/*, receiptId*/);
+            KeyboardReader keyBoardThread(connectionHandler, user, inventory);
+            FromServerReader serverSocketThread(connectionHandler, user, inventory);
 
             //bool *t = new bool;
             //bool *r = new bool;

@@ -8,7 +8,7 @@ using namespace std;
 
 class KeyboardReader {
 public:
-    KeyboardReader(ConnectionHandler * connectionHandler, User * user, bool *terminate/*, ReceiptId * receiptId*/);
+    KeyboardReader(ConnectionHandler * connectionHandler, User * user, Inventory * inventory);
 //    KeyboardReader(ConnectionHandler* c, bool* lO, bool* t); // do we need it?
 //    void operator()();
     void operator()();
@@ -19,6 +19,7 @@ public:
 private:
     ConnectionHandler * connectionHandler;
     User *user;
+    Inventory * inventory;
     int subscriptionId = 1;
     //ReceiptId * receiptId;
     int receiptId = 1;

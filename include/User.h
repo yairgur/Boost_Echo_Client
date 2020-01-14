@@ -29,7 +29,7 @@ public:
     Inventory* getUserInventory();
 
 private:
-    Inventory* inventory;
+    //Inventory* inventory;
     string userName;
     string passcode;
     int subscriptionId;

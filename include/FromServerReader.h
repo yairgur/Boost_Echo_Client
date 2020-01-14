@@ -6,7 +6,7 @@
 
 class FromServerReader {
 public:
-    FromServerReader(ConnectionHandler * connectionHandler, User * user, bool *terminate/*, ReceiptId * receiptId*/);
+    FromServerReader(ConnectionHandler * connectionHandler, User * user, Inventory * inventory);
 //    FromServerReader(ConnectionHandler* c, bool* lO, bool* t); // do we need it?
     void operator()();
     vector<string> split(string str, string delimiter);
@@ -14,6 +14,7 @@ public:
     string getFullBookName(string str);
     //void run();
 private:
+    Inventory * inventory;
     ConnectionHandler * connectionHandler;
     User * user;
 

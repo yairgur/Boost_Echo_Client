@@ -57,7 +57,7 @@ bool FromServerReader::contains(vector<string> vec, string toCompare)
     return false;
 }
 
-FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user, bool *terminate/*, ReceiptId * receiptId*/): connectionHandler(connectionHandler), user(user)/*, receiptId(receiptId)*/ {}
+FromServerReader::FromServerReader(ConnectionHandler * connectionHandler, User * user, Inventory * inventory): connectionHandler(connectionHandler), user(user), inventory(inventory) {}
 
 void FromServerReader::operator()(){
     while (connectionHandler->LoggedIn()) {
@@ -90,26 +90,23 @@ void FromServerReader::operator()(){
             } else if (socketFrame[0] == "MESSAGE") {
                 vector<string> body = split(socketFrame[5], " ");
                 if(contains(body, "has") && !contains(body, "added")){///private case of borrow
-                    Inventory* userInventory = user->getUserInventory();
                     string subscriptionId = socketFrame[1].substr(socketFrame[1].find(':')+1);
                     string genre = user->containsSubscriptionId(stoi(subscriptionId));
                     string bookName = getFullBookName(socketFrame[5]);
                     cout << "===Book name is: " << bookName << endl;
                     if(user->getName() == body[0])
                     {
-                        userInventory->deleteFromInventory(bookName, genre);
-                        //userInventory->addBorrowedBook(bookName, body[0]);
+                        inventory->deleteFromInventory(bookName, genre);
                     }
                     else{
-                        bool isExist = userInventory->isWishToBorrow(bookName);
+                        bool isExist = inventory->isWishToBorrow(bookName);
                         if(isExist){
                             string borrowedUser = body[0];
                             string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + bookName + " from " + borrowedUser + "\n" + '\0';
-                            userInventory->addBorrowedBook(bookName, body[0]); //fixme - delete
+                            inventory->addBorrowedBook(bookName, body[0]); //fixme - delete
                             cout << "ZZZ "<< genre << endl;
-                            userInventory->addBookToInventory(bookName, genre);
-                            userInventory->deleteFromWishList(bookName);
-                            //userInventory->addBorrowedBook(bookName, body[0]);
+                            inventory->addBookToInventory(bookName, genre);
+                            inventory->deleteFromWishList(bookName);
                             connectionHandler->sendLine(frame);
                         }
                     }
@@ -126,14 +123,13 @@ void FromServerReader::operator()(){
                 }
                 else if(contains(body, "borrow"))
                 {
-                    Inventory* userInventory = user->getUserInventory();
                     string bookName = getFullBookName(socketFrame[5]);
                     if(user->getName() == body[0])
                     {
 //                        userInventory->addBorrowedBook(bookName, user->getName());
                     }
                     else{
-                        bool isExist = userInventory->isExistInClientBooks(bookName);
+                        bool isExist = inventory->isExistInClientBooks(bookName);
                         if(isExist){
                             string subscriptionId = socketFrame[1].substr(socketFrame[1].find(':')+1);
                             string genre = user->containsSubscriptionId(stoi(subscriptionId));
@@ -149,14 +145,11 @@ void FromServerReader::operator()(){
                     string book = getFullBookName(socketFrame[5]);
                     cout << "===Book name is: " << book << endl;
                     string userName = socketFrame[5].substr(socketFrame[5].find_last_of(' ')+1);
-                    //inventory = user->getUserInventory();
-                    Inventory* userInventory = user->getUserInventory();
                     string genre = socketFrame[3].substr(socketFrame[3].find(':')+1);
                     if(user->getName() == userName)
                     {
                         cout << "XXX "<< genre << endl;
-                        userInventory->addBookToInventory(book, genre); // todo: book name 1!!
-//                        userInventory->deleteBorrowedBook(book);
+                        inventory->addBookToInventory(book, genre); // todo: book name 1!!
                     }
                 }
                 else if(contains(body, "status"))
@@ -165,10 +158,7 @@ void FromServerReader::operator()(){
                     string genre = user->containsSubscriptionId(stoi(subscriptionId));
                     if(genre != "")
                     { //there is a gener with this subscriptionId
-                        //inventory = user->getUserInventory();
-                        Inventory* userInventory = user->getUserInventory();
-                        //string booksList = inventory->toString();
-                        string booksList = userInventory->toString();
+                        string booksList = inventory->toString();
                         cout<< booksList << endl;
                         string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + ":" + booksList + "\n" + '\0';
                         connectionHandler->sendLine(frame);
