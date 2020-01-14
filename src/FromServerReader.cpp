@@ -106,6 +106,7 @@ void FromServerReader::operator()(){
                             string borrowedUser = body[0];
                             string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + bookName + " from " + borrowedUser + "\n" + '\0';
                             userInventory->addBorrowedBook(bookName, body[0]); //fixme - delete
+                            cout << "ZZZ "<< genre << endl;
                             userInventory->addBookToInventory(bookName, genre);
                             userInventory->deleteFromWishList(bookName);
                             //userInventory->addBorrowedBook(bookName, body[0]);
@@ -150,9 +151,10 @@ void FromServerReader::operator()(){
                     string userName = socketFrame[5].substr(socketFrame[5].find_last_of(' ')+1);
                     //inventory = user->getUserInventory();
                     Inventory* userInventory = user->getUserInventory();
-                    string genre = socketFrame[3].substr(socketFrame[5].find(':')+1);
+                    string genre = socketFrame[3].substr(socketFrame[3].find(':')+1);
                     if(user->getName() == userName)
                     {
+                        cout << "XXX "<< genre << endl;
                         userInventory->addBookToInventory(book, genre); // todo: book name 1!!
 //                        userInventory->deleteBorrowedBook(book);
                     }

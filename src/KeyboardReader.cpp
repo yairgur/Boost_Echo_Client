@@ -98,6 +98,8 @@ void KeyboardReader::operator()() {
                 Inventory* userInventory = user->getUserInventory();
                 string book = commands[2]; // todo :func that extract full book name
                 string genre = commands[1];
+
+                cout << "YYY "<< genre << endl;
                 (*userInventory).addBookToInventory(book, genre);
 
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + user->getName() + " has added the book " +
