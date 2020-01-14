@@ -15,44 +15,61 @@ Inventory::Inventory(){
 }
 
 map<string, vector<string>> Inventory::getClientsBooks(){
+    std::lock_guard<std::mutex> lock(clientsBooksMutex);
     return clientsBooks;
 }
 
 map<string, string> Inventory::getBorrowedFromMap()
 {
+    std::lock_guard<std::mutex> lock(borrowedMapMutex);
     return borrowedMap;
 }
 
 vector<string> Inventory::getListOfClientsBooks(string genre){
+    std::lock_guard<std::mutex> lock(clientsBooksMutex);
     return clientsBooks.at(genre);
 }
 
 string Inventory::getBorrowedFrom (string userName)
 {
+    std::lock_guard<std::mutex> lock(borrowedMapMutex);
     borrowedMap.at(userName);
 }
 
 
 bool Inventory::isWishToBorrow(string bookName) {
-    map<string, string>::iterator it = wishToBorrow.find(bookName);
-    if(it != wishToBorrow.end())
-    {
-        return true;
+    for(vector<string>::iterator it = wishToBorrow.begin(); it != wishToBorrow.end(); it++){
+        if((*it) == bookName)
+        {
+            return true;
+        }
     }
     return false;
 }
 
 
-void Inventory::insertWishToBorrow(string bookName, string user) {
-    wishToBorrow[bookName] = user;
+void Inventory::insertWishToBorrow(string bookName) {
+
+    std::lock_guard<std::mutex> lock(wishToBorrowMutex);
+    wishToBorrow.push_back(bookName);
 }
 
 
 
 //// delete
-bool Inventory::deleteFromInventory(string book){
-    bool deleted = true;
-    clientsBooks.erase(book);
+bool Inventory::deleteFromInventory(string bookName, string genre){
+
+    std::lock_guard<std::mutex> lock(clientsBooksMutex);
+    bool deleted = false;
+    for(vector<string>::iterator it = clientsBooks[genre].begin(); it != clientsBooks[genre].end() && !deleted; it++)
+    {
+        if((string)(*it) == bookName)
+        {
+            cout << "================= We just deleted " << bookName << " from this user Inventory====================" << endl;
+            clientsBooks[genre].erase(it);
+            deleted = true;
+        }
+    }
 //    for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end() && !deleted; ++it)
 //    {
 //        for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end() && !deleted; ++it1)
@@ -67,6 +84,8 @@ bool Inventory::deleteFromInventory(string book){
 }
 
 bool Inventory::deleteBorrowedBook(string bookName){ // todo: add try ..
+
+    std::lock_guard<std::mutex> lock(borrowedMapMutex);
     borrowedMap.erase(bookName);
     return true;
 
@@ -75,6 +94,8 @@ bool Inventory::deleteBorrowedBook(string bookName){ // todo: add try ..
 
 //// add
 bool Inventory::addBookToInventory(string bookName, string genre) {
+
+    std::lock_guard<std::mutex> lock(clientsBooksMutex);
     if(clientsBooks.find(genre) == clientsBooks.end()){
         vector<string> vect;
         vect.push_back(bookName);
@@ -88,12 +109,15 @@ bool Inventory::addBookToInventory(string bookName, string genre) {
 
 
 bool Inventory::addBorrowedBook(string bookName, string userName) {
+
+    std::lock_guard<std::mutex> lock(borrowedMapMutex);
     borrowedMap[bookName] = userName;
     return true;
 }
 
 string Inventory::getFromBorrowedMap(string bookName)
 {
+    std::lock_guard<std::mutex> lock(borrowedMapMutex);
     string res = borrowedMap[bookName];
     borrowedMap.erase(bookName);
     return res;
@@ -101,14 +125,14 @@ string Inventory::getFromBorrowedMap(string bookName)
 
 
 
-bool Inventory::isExistInClientBooks(string book)
-{
+bool Inventory::isExistInClientBooks(string book){
+    std::lock_guard<std::mutex> lock(clientsBooksMutex);
     bool isExist = false;
     for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end(); ++it)
     {
         for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end(); ++it1)
         {
-           if((*it1) == book){
+           if((string)(*it1) == book){
                isExist = true;
            }
         }
@@ -116,18 +140,33 @@ bool Inventory::isExistInClientBooks(string book)
     return isExist;
 }
 
+void Inventory::deleteFromWishList(string bookName)
+{
+    bool deleted = false;
+    for(vector<string>::iterator it = wishToBorrow.begin(); it != wishToBorrow.end() && !deleted; it++){
+        if((string)(*it) == bookName)
+        {
+            wishToBorrow.erase(it);
+            deleted = true;
+        }
+    }
+}
+
+
 string Inventory::toString(){
+    std::lock_guard<std::mutex> lock(clientsBooksMutex);
     string bookList = "";
 
     for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end(); ++it)
     {
-        for(vector<string>::iterator it1 = (*it).second.begin() ; it1 != (*it).second.end(); ++it1)
+        for(vector<string>::iterator it1 = (*it).second.begin() ; !(*it).second.empty() && it1 != (*it).second.end(); ++it1)
         {
             bookList = bookList + "," + *it1;
         }
     }
-
-    return bookList.substr(1,bookList.length());
+    if(bookList.size()>1)
+        return bookList.substr(1,bookList.length());
+    return bookList;
 }
 
 

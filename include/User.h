@@ -8,6 +8,8 @@
 #include <map>
 #include "../include/Inventory.h"
 #include "MessageType.h"
+#include <mutex>
+
 
 using namespace std;
 
@@ -34,11 +36,14 @@ private:
     map<string, int> subscriptionIdMap; // genre to subscription id
     map<int, MessageType*> receiptToMessageType;
     bool loggedIn;
-    //string gener;
+
     vector<std::string> books;
-    //vector<std::string> subscribedGenres;
+
     map<string, int> subscribeIdToGenreMap;
     int reciptId;
+    std::mutex receiptToMessageTypeMutex;
+    std::mutex subscriptionIdMapMutex;
+
 };
 
 

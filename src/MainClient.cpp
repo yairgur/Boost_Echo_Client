@@ -52,18 +52,10 @@ int main() {
             string frame =
                     "CONNECT\naccept-version:1.2\nhost:stomp.cs.bgu.ac.il\nlogin:" + commands[2] + "\npasscode:" +
                     commands[3] + "\n\n" + '\0';
-            //cout << frame << endl;
             vector<string> output;
-            //output = split(frame, "\n");
             boost::split(output, frame, boost::is_any_of("\n"));
             connectionHandler->sendLine(frame);
-//            for(int i=0; i<output.size(); ++i)
-//            {
-//                connectionHandler->sendLine(output[i]);
-//            }
-//            connectionHandler.sendFrameAscii(frame, '\u0000');
-//            user->setSubscriptionId(0); // first subscriptionId is 0
-            //ReceiptId * receiptId = new ReceiptId();
+
             bool *terminate;
             KeyboardReader keyBoardThread(connectionHandler, user, terminate/*, receiptId*/);
             FromServerReader serverSocketThread(connectionHandler, user, terminate/*, receiptId*/);

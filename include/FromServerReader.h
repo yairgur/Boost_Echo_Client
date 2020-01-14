@@ -11,6 +11,7 @@ public:
     void operator()();
     vector<string> split(string str, string delimiter);
     bool contains(vector<string> vec, string toCompare);
+    string getFullBookName(string str);
     //void run();
 private:
     ConnectionHandler * connectionHandler;

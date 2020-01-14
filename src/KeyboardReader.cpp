@@ -112,11 +112,13 @@ void KeyboardReader::operator()() {
                 vector<string> output;
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));
+                user->getUserInventory()->insertWishToBorrow(commands[2]);
                 connectionHandler->sendLine(frame);
             } else if (commands[0] == "return") {
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + "Returning " + commands[2] + " to " +
                                user->getUserInventory()->getFromBorrowedMap(commands[2]) + "\n" + '\0';
-                user->getUserInventory()->deleteFromInventory(commands[2]);
+                user->getUserInventory()->deleteBorrowedBook(commands[2]);
+                user->getUserInventory()->deleteFromInventory(commands[2], commands[1]);
                 vector<string> output;
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));
@@ -137,7 +139,6 @@ void KeyboardReader::operator()() {
                 boost::split(output, frame, boost::is_any_of("\n"));
                 connectionHandler->sendLine(frame);
                 break;
-                //connectionHandler->close(); // kills the socket
             }
         }
 

@@ -71,11 +71,12 @@ int User::getSubscriptionIdFromGenre(string genre) {
 
 void User::addToReceiptIdMap(int receiptId, MessageType *messageType)
 {
+    std::lock_guard<std::mutex> lock(receiptToMessageTypeMutex);
     receiptToMessageType.insert(pair<int, MessageType*>(receiptId, messageType));
 }
 
 MessageType User::getMessageTypeByReceiptId(int receiptId) {
-
+    std::lock_guard<std::mutex> lock(receiptToMessageTypeMutex);
     return *receiptToMessageType[receiptId];
 
 }

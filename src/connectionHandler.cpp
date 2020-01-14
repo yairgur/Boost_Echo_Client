@@ -1,5 +1,5 @@
 #include <connectionHandler.h>
- 
+#include <mutex>
 using boost::asio::ip::tcp;
 
 using std::cin;
@@ -7,6 +7,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+
  
 ConnectionHandler::ConnectionHandler(string host, short port): host_(host), port_(port), io_service_(), socket_(io_service_){}
     
@@ -72,7 +73,9 @@ bool ConnectionHandler::getLine(std::string& line) {
     return getFrameAscii(line, '\0');
 }
 
+
 bool ConnectionHandler::sendLine(std::string& line) {
+    std::lock_guard<std::mutex> lock(mutex);
     return sendFrameAscii(line, '\n');
 }
  

@@ -1,5 +1,7 @@
-login 127.0.0.1:5555 bob alice
-login 127.0.0.1:5555 bob123 alice
+login 127.0.0.1:5555 bob1 alice
+login 127.0.0.1:5555 bob2 alice
+login 127.0.0.1:5555 bob3 alice
+login 127.0.0.1:5555 yair EliranShodedZkenot
 join sci
 add sci found
 exit sci
