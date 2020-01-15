@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//User::~User(){}
+User::~User(){}
 
 User::User()
 {

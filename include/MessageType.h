@@ -13,6 +13,7 @@ using namespace std;
 
 class MessageType {
 public:
+    ~MessageType();
     //get
     MessageType(string messageType,string genre, int receiptId);
     string getMessageType();

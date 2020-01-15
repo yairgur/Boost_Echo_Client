@@ -21,6 +21,7 @@ private:
     std::mutex borrowedMapMutex;
 public:
     Inventory();
+    ~Inventory();
     map<string, vector<string>> getClientsBooks();
     map<string, string> getBorrowedFromMap();
     vector<string> getListOfClientsBooks(string genre);

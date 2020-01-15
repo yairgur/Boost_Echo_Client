@@ -77,7 +77,6 @@ void FromServerReader::operator()(){
                 if(messageTypePtr.getMessageType() == "SUBSCRIBE")
                 {
                     cout << "Joined club " << messageTypePtr.getGenere() << endl;
-
                 }
                 else if(messageTypePtr.getMessageType() == "UNSUBSCRIBE")
                 {
@@ -85,8 +84,12 @@ void FromServerReader::operator()(){
                 }
                 else if(messageTypePtr.getMessageType() == "DISCONNECT"){
                     connectionHandler->logOff(); // TODO activate only if disconnected and it will end the program!!
+                    delete user;
+                    delete inventory;
+                    delete connectionHandler;
                     break;
                 }
+
             } else if (socketFrame[0] == "MESSAGE") {
                 vector<string> body = split(socketFrame[5], " ");
                 if(contains(body, "has") && !contains(body, "added")){///private case of borrow

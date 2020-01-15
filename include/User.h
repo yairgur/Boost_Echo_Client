@@ -17,6 +17,7 @@ using namespace std;
 class User {
 public:
     User();
+    ~User();
     User(string userName, string passcode);
     void addSubscriptionIdToGenre(string genre, int subscriptionId);
     int getSubscriptionIdFromGenre(string genre);

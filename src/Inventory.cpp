@@ -10,6 +10,8 @@
 
 using namespace std;
 
+Inventory::~Inventory() {}
+
 Inventory::Inventory(){
 
 }

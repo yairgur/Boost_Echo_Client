@@ -45,6 +45,9 @@ void KeyboardReader::operator()() {
             if(line == "bye")
             {
                 connectionHandler->logOff();
+                delete user;
+                delete inventory;
+                delete connectionHandler;
                 break;
             }
             if(commands.size()>3) //if book name is more than one word
@@ -80,10 +83,10 @@ void KeyboardReader::operator()() {
                 MessageType *messageType = new MessageType("SUBSCRIBE", commands[1], receiptId);
                 user->addToReceiptIdMap(receiptId, messageType);
                 increaseReceiptId();
-
                 boost::split(output, frame, boost::is_any_of("\n"));
                 connectionHandler->sendLine(frame);
                 cout << "Subscription Frame is:\n" << frame << endl;
+                //delete messageType;
             } else if (commands[0] == "exit") {
                 int matchSubscriptionId = user->getSubscriptionIdFromGenre(commands[1]);
                 string frame =
@@ -93,11 +96,10 @@ void KeyboardReader::operator()() {
                 user->addToReceiptIdMap(receiptId, messageType);
                 increaseReceiptId();
                 connectionHandler->sendLine(frame);
+                //delete messageType;
             } else if (commands[0] == "add") {
                 string book = commands[2]; // todo :func that extract full book name
                 string genre = commands[1];
-
-                cout << "YYY "<< genre << endl;
                 (*inventory).addBookToInventory(book, genre);
 
                 string frame = "SEND\ndestination:" + commands[1] + "\n\n" + user->getName() + " has added the book " +
@@ -138,6 +140,7 @@ void KeyboardReader::operator()() {
                 //output = split(frame, "\n");
                 boost::split(output, frame, boost::is_any_of("\n"));
                 connectionHandler->sendLine(frame);
+                //delete messageType;
                 break;
             }
         }

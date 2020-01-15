@@ -57,7 +57,6 @@ int main() {
             boost::split(output, frame, boost::is_any_of("\n"));
             connectionHandler->sendLine(frame);
 
-            bool *terminate;
             KeyboardReader keyBoardThread(connectionHandler, user, inventory);
             FromServerReader serverSocketThread(connectionHandler, user, inventory);
 
