@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
-#include <include/User.h>
+#include <User.h>
 
 
 using namespace std;
@@ -155,15 +155,17 @@ void Inventory::deleteFromWishList(string bookName)
 }
 
 
-string Inventory::toString(){
+string Inventory::toString(string genre){
     std::lock_guard<std::mutex> lock(clientsBooksMutex);
     string bookList = "";
 
     for(map<string,vector<string>>::iterator it = clientsBooks.begin(); it != clientsBooks.end(); ++it)
     {
-        for(vector<string>::iterator it1 = (*it).second.begin() ; !(*it).second.empty() && it1 != (*it).second.end(); ++it1)
-        {
-            bookList = bookList + "," + *it1;
+        if((*it).first == genre) {
+            for (vector<string>::iterator it1 = (*it).second.begin();
+                 !(*it).second.empty() && it1 != (*it).second.end(); ++it1) {
+                bookList = bookList + "," + *it1;
+            }
         }
     }
     if(bookList.size()>1)

@@ -1,21 +1,13 @@
-#include "../include/User.h"
-#include "../include/MessageType.h"
+#include "User.h"
+#include "MessageType.h"
 #include <vector>
 
 using namespace std;
 
 User::~User(){}
 
-User::User()
-{
 
-}
-
-User::User(string userName, string passcode) {
-    this->userName = userName;
-    this->passcode = passcode;
-    this->reciptId = 1;
-    this->subscriptionId = 1;
+User::User(string userName, string passcode):userName(userName),passcode(passcode), reciptId(1), subscriptionId(1) {
 }
 
 //User* User::instance = 0;
@@ -35,27 +27,7 @@ int User::getSubscriptionId(){
     return 1;
 }
 
-//bool User::isLoggedIn(){
-//    return loggedIn;
-//}
-//
-//void User::logIn(){
-//    loggedIn = true;
-//}
-//
-//void User::disconnect() {
-//    loggedIn = false;
-//}
-//
-//void User::insertReceipt(string message){
-//    receiptMap[reciptId] = message;
-//    reciptId++;
-//}
-//
-//string User::findReceipt(int receiptId){
-//    return receiptMap[receiptId];
-//}
-//
+
 
 void User::addSubscriptionIdToGenre(string genre, int subscriptionId) {
     subscribeIdToGenreMap.insert(pair<string, int>(genre, subscriptionId));

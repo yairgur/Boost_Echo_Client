@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "../include/Inventory.h"
+#include "Inventory.h"
 #include "MessageType.h"
 #include <mutex>
 

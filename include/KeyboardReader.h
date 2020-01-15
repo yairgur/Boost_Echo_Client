@@ -1,8 +1,8 @@
 #ifndef BOOST_ECHO_CLIENT_KEYBOARDREADER_H
 #define BOOST_ECHO_CLIENT_KEYBOARDREADER_H
-#include "connectionHandler.h"
+#include "ConnectionHandler.h"
 #include "User.h"
-#include "ReceiptId.h"
+
 
 using namespace std;
 

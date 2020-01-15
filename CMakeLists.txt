@@ -13,20 +13,18 @@ link_libraries("-lboost_system -pthread")
 
 
 add_executable(Boost_Echo_Client
-        include/connectionHandler.h
+        include/ConnectionHandler.h
         include/User.h
         include/KeyboardReader.h
         include/FromServerReader.h
         include/Inventory.h
-        include/ReceiptId.h
         include/MessageType.h
-        src/connectionHandler.cpp
+        src/ConnectionHandler.cpp
         src/FromServerReader.cpp
         src/KeyboardReader.cpp
         src/User.cpp
         src/Inventory.cpp
         src/MainClient.cpp
-        src/ReceiptId.cpp
         src/MessageType.cpp
         )
 

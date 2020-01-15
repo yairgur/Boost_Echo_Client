@@ -34,7 +34,7 @@ public:
     bool addBorrowedBook(string bookName, string userName);
     bool isWishToBorrow(string bookName);
     void insertWishToBorrow(string bookName);
-    string toString();
+    string toString(string genre);
     void deleteFromWishList(string bookName);
 };
 

@@ -1,8 +1,8 @@
 #ifndef BOOST_ECHO_CLIENT_FROMSERVERREADER_H
 #define BOOST_ECHO_CLIENT_FROMSERVERREADER_H
-#include "connectionHandler.h"
+#include "ConnectionHandler.h"
 #include "User.h"
-#include "ReceiptId.h"
+
 
 class FromServerReader {
 public:

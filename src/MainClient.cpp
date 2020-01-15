@@ -1,13 +1,14 @@
 #include <iostream>
 #include <string>
-#include <include/User.h>
+#include <User.h>
 #include <boost/lexical_cast.hpp>
-#include <include/connectionHandler.h>
+#include <ConnectionHandler.h>
 #include <thread>
-#include <include/FromServerReader.h>
-#include <include/KeyboardReader.h>
+#include <FromServerReader.h>
+#include <KeyboardReader.h>
 #include <vector>
 #include <boost/algorithm/string.hpp>
+
 
 //vector<string> split(string str, string seperator);
 

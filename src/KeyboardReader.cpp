@@ -1,11 +1,11 @@
-#include "include/KeyboardReader.h"
+#include "KeyboardReader.h"
 #include <iostream>
 #include <string>
 #include <boost/algorithm/string.hpp>
-#include <include/User.h>
+#include <User.h>
 #include <boost/lexical_cast.hpp>
-#include <../include/connectionHandler.h>
-#include "include/FromServerReader.h"
+#include <ConnectionHandler.h>
+#include "FromServerReader.h"
 #include <thread>
 
 

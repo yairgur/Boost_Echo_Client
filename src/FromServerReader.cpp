@@ -1,9 +1,9 @@
-#include "include/FromServerReader.h"
-#include "include/KeyboardReader.h"
+#include "FromServerReader.h"
+#include "KeyboardReader.h"
 #include <iostream>
 #include <string>
 #include <boost/algorithm/string.hpp>
-#include <include/User.h>
+#include <User.h>
 
 vector<string> FromServerReader::split(string s, string delimiter)
 {
@@ -162,7 +162,7 @@ void FromServerReader::operator()(){
                     string genre = user->containsSubscriptionId(stoi(subscriptionId));
                     if(genre != "")
                     { //there is a gener with this subscriptionId
-                        string booksList = inventory->toString();
+                        string booksList = inventory->toString(genre);
                         cout<< booksList << endl;
                         string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + ":" + booksList + "\n" + '\0';
                         connectionHandler->sendLine(frame);
