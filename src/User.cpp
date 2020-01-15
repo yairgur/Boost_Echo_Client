@@ -71,9 +71,9 @@ void User::addToReceiptIdMap(int receiptId, MessageType *messageType)
     receiptToMessageType.insert(pair<int, MessageType*>(receiptId, messageType));
 }
 
-MessageType User::getMessageTypeByReceiptId(int receiptId) {
+MessageType* User::getMessageTypeByReceiptId(int receiptId) {
     std::lock_guard<std::mutex> lock(receiptToMessageTypeMutex);
-    return *receiptToMessageType[receiptId];
+    return receiptToMessageType[receiptId];
 
 }
 

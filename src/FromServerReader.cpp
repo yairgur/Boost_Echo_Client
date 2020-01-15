@@ -72,24 +72,25 @@ void FromServerReader::operator()(){
                 cout << "Login successful." << endl;
                 connectionHandler->logIn();
             } else if (socketFrame[0] == "RECEIPT") {
-                MessageType messageTypePtr = (user->getMessageTypeByReceiptId(stoi(socketFrame[1].substr(socketFrame[1].find(':') + 1))));
-                cout << "This is message type: " << messageTypePtr.getMessageType() << endl;
-                if(messageTypePtr.getMessageType() == "SUBSCRIBE")
+                MessageType *messageTypePtr = (user->getMessageTypeByReceiptId(stoi(socketFrame[1].substr(socketFrame[1].find(':') + 1))));
+                cout << "This is message type: " << messageTypePtr->getMessageType() << endl;
+                if(messageTypePtr->getMessageType() == "SUBSCRIBE")
                 {
-                    cout << "Joined club " << messageTypePtr.getGenere() << endl;
+                    cout << "Joined club " << messageTypePtr->getGenere() << endl;
                 }
-                else if(messageTypePtr.getMessageType() == "UNSUBSCRIBE")
+                else if(messageTypePtr->getMessageType() == "UNSUBSCRIBE")
                 {
-                    cout << "Exited club " << messageTypePtr.getGenere() << endl;
+                    cout << "Exited club " << messageTypePtr->getGenere() << endl;
                 }
-                else if(messageTypePtr.getMessageType() == "DISCONNECT"){
+                else if(messageTypePtr->getMessageType() == "DISCONNECT"){
                     connectionHandler->logOff(); // TODO activate only if disconnected and it will end the program!!
                     delete user;
                     delete inventory;
                     delete connectionHandler;
+                    delete messageTypePtr;
                     break;
                 }
-
+                delete messageTypePtr;
             } else if (socketFrame[0] == "MESSAGE") {
                 vector<string> body = split(socketFrame[5], " ");
                 if(contains(body, "has") && !contains(body, "added")){///private case of borrow
